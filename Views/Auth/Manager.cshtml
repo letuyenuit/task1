@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "Login Page";
+}
+@model List<Role>
+
+<div>
+    <h1 class="display-4">Manager RBAC</h1>
+    <form method="post">
+        <ul>
+            @for(int i = 0; i < Model.Count(); i++)
+            {
+                <input type="hidden"  asp-for="@Model[i].IdRole"/>
+                <input type="hidden" asp-for="@Model[i].Name" />
+                <li>@Model[i].Name</li>
+                <ul class="m-3">
+                    @for (int j = 0; j < Model[i].RolePermissions.Count(); j++)
+                    {
+
+                        <li>
+                            <input type="hidden" asp-for="@Model[i].RolePermissions[j].IdPermission" />
+                            <input type="hidden" asp-for="@Model[i].RolePermissions[j].IdRole" />
+                            <input type="checkbox" asp-for="@Model[i].RolePermissions[j].IsAccessed" />
+                            @Model[i].RolePermissions[j].Permission.Name
+                        </li>
+                    }
+                </ul>
+            }
+        </ul>
+        <button type="submit" class="bg-primary border-0">Update RBAC</button>
+
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}
