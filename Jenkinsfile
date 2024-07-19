@@ -3,6 +3,19 @@ pipeline{
     environment {
         DOCKER_TOKEN = credentials('dockerhub')
     }
+    parameters {
+        choice choices: ['Baseline', 'APIS', 'Full'],
+            description: 'Type of scan that is going to perform inside the container',
+            name: 'SCAN_TYPE'
+            
+        string defaultValue: 'http://192.168.56.90:5000',
+            description: 'Target URL to scan',
+            name: 'TARGET'
+            
+        booleanParam defaultValue: true,
+            description: 'Parameter to know if you want to generate a report.',
+            name: 'GENERATE_REPORT'
+    }
     stages {
         stage('clean workspace'){
             steps{
@@ -73,9 +86,83 @@ pipeline{
                 sh "trivy image letuyenuit212/devsecops:v1 > trivyimage.txt"
             }
         }
+        
         stage('Deploy to container'){
             steps{
-                sh 'docker-compose up -d'
+                sh 'docker compose up -d'
+            }
+        }
+
+        stage('Setting up OWASP ZAP docker container') {
+            steps {
+                echo 'Pulling up last OWASP ZAP container --> Start'
+                sh 'docker pull ghcr.io/zaproxy/zaproxy:stable'
+                echo 'Pulling up last VMS container --> End'
+                echo 'Starting container --> Start'
+                sh 'docker run -dt --name owasp ghcr.io/zaproxy/zaproxy:stable /bin/bash '
+            }
+        }
+
+        stage('Prepare wrk directory') {
+            when {
+                environment name : 'GENERATE_REPORT', value: 'true'
+            }
+            steps {
+                script {
+                    sh '''
+                             docker exec owasp \
+                             mkdir /zap/wrk
+                         '''
+                }
+            }
+        }
+
+        stage('Scanning target on owasp container') {
+            steps {
+                script {
+                    scan_type = "${params.SCAN_TYPE}"
+                    echo "----> scan_type: $scan_type"
+                    target = "${params.TARGET}"
+                    if (scan_type == 'Baseline') {
+                        sh """
+                             docker exec owasp \
+                             zap-baseline.py \
+                             -t $target \
+                             -r report.html \
+                             -I
+                         """
+                    }
+                     else if (scan_type == 'APIS') {
+                        sh """
+                             docker exec owasp \
+                             zap-api-scan.py \
+                             -t $target \
+                             -r report.html \
+                             -I
+                         """
+                     }
+                     else if (scan_type == 'Full') {
+                        sh """
+                             docker exec owasp \
+                             zap-full-scan.py \
+                             -t $target \
+                             -r report.html \
+                             -I
+                         """
+                     }
+                     else {
+                        echo 'Something went wrong...'
+                     }
+                }
+            }
+        }
+        stage('Copy Report to Workspace') {
+            steps {
+                script {
+                    sh '''
+                         docker cp owasp:/zap/wrk/report.html ${WORKSPACE}/report.html
+                     '''
+                }
             }
         }
     }
