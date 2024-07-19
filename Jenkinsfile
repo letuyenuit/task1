@@ -18,14 +18,12 @@ pipeline{
             steps {
                 script {
                     withSonarQubeEnv('Sonar') {
-                        sh '''${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=doanchuyennghanh_devsecops \
-                        -Dsonar.projectName=devsecops \
-                        -Dsonar.projectVersion=1.0 \
-                        -Dsonar.sources=Controllers/ \
-                        -Dsonar.java.binaries=target/test-classes/com/visualpathit/account/controllerTest/ \
-                        -Dsonar.junit.reportsPath=target/surefire-reports/ \
-                        -Dsonar.jacoco.reportsPath=target/jacoco.exec \
-                        -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml'''
+                        sh '''${scannerHome}/bin/sonar-scanner 
+                            -Dsonar.host.url=https://sonarcloud.io
+                            -Dsonar.login=b1a11cbe4aca5e7071b4fde90518b1374c4c37fd
+                            -Dsonar.organization=doanchuyennghanh
+                            -Dsonar.projectKey=doanchuyennghanh_devsecops
+                            -Dsonar.sources=Controllers/ '''
                     }
                 }
             }
