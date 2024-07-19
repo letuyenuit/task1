@@ -1,9 +1,5 @@
 pipeline{
     agent any
-    environment {
-        // SONAR_PROJECT_KEY= credentials('sonar-project-key')
-        // SONAR_PROJECT_NAME = credentials('sonar-project-name')
-    }
     stages {
         stage('clean workspace'){
             steps{
