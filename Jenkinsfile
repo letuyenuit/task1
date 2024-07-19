@@ -22,6 +22,12 @@ pipeline{
                 cleanWs()
             }
         }
+        stage('Remove exists container'){
+            steps{
+                sh 'docker rm owasp'
+                sh 'docker compose down'
+            }
+        }
         stage('Checkout from Git'){
             steps{
                 git branch: 'master', url: 'https://github.com/letuyenuit/task1.git'
