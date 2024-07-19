@@ -1,22 +1,9 @@
 version: '3.9'
 services:
-  sqlserver:
-    image: mcr.microsoft.com/mssql/server:2019-latest
-    container_name: sqlserver
-    environment:
-      - SA_PASSWORD=letuyen
-      - ACCEPT_EULA=Y
-    ports:
-      - "1433:1433"
-    volumes:
-      - sqlserver_data:/var/opt/mssql
-
   backend:
     image: letuyenuit212/devsecops:v1
     container_name: backend
     ports:
       - "5000:5000"
-    depends_on:
-      - sqlserver
 volumes:
   sqlserver_data:
