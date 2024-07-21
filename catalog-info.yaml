@@ -3,6 +3,7 @@ kind: Component
 metadata:
   name: task1
   annotations:
+    jenkins.io/job-full-name: github/letuyenuit/task1
     github.com/project-slug: letuyenuit/task1
 spec:
   type: other
