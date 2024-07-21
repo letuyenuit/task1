@@ -1,0 +1,10 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: task1
+  annotations:
+    github.com/project-slug: letuyenuit/task1
+spec:
+  type: other
+  lifecycle: unknown
+  owner: guests
