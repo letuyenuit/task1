@@ -1,7 +1,7 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: task1
+  name: TestCICD
   annotations:
     github.com/project-slug: letuyenuit/task1
 spec:
