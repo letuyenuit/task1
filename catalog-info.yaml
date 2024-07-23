@@ -5,7 +5,7 @@ metadata:
   title: Jenkins step monitor
   annotations:
     github.com/project-slug: letuyenuit/task1
-    jenkins.io/job-full-name: test
+    jenkins.io/job-full-name: backstage-sample-service/test
 spec:
   type: service
   lifecycle: experimental
