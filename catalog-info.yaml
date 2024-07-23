@@ -1,10 +1,12 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: TestCICD
+  name: Jenkins
+  title: Jenkins step monitor
   annotations:
     github.com/project-slug: letuyenuit/task1
+    jenkins.io/job-full-name: test
 spec:
   type: service
   lifecycle: experimental
-  owner: guests
+  owner: User:letuyenuit
